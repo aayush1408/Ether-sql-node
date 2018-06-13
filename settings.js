@@ -2,7 +2,7 @@ module.exports = {
     database:{
         user:'test',
         password:'test',
-        'db':'test'
+        db:'test'
     },
     node:{
         type:'Infura',
