@@ -1,4 +1,5 @@
-const sequelize = require('sequelize');
+const pg = require('pg');
+const Sequelize = require('sequelize');
 const Web3 = require('web3');
 const settings = require('./settings.js');
 
@@ -17,8 +18,7 @@ function setupNodeSession(node_type, host='localhost', port=8545, api_token='') 
         node = new Web3(new Web3.providers.HttpProvider(`http://${host}:${port}`));
     }
     else if(node_type == 'Infura'){
-        // let network = host.split('.')[0]  
-        node = new Web3( new Web3.providers.HttpProvider(`https://${host}"/"${api_token}`));
+        node = new Web3( new Web3.providers.HttpProvider(`https://${settings.node.host}"/"${api_token}`));
     }
     else{
         console.log('Node not supported');
@@ -29,6 +29,6 @@ function setupNodeSession(node_type, host='localhost', port=8545, api_token='') 
     else{
         console.log('Unable to connect')
     }
-    return node,push_trace;
+    return [node,push_trace];
 }
-module.exports = setupNodeSession;
+module.exports = {setupNodeSession,connection};
