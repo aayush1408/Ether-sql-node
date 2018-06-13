@@ -4,6 +4,23 @@ const settings = require('./settings');
 const setupNodeSession = require('./initialise').setupNodeSession;
 const connection = require('./initialise').connection;
 const Block = require('./models/blocks');
+var kue = require('kue');
+var newQueue = kue.createQueue();
+
+function newBlock(block_number){
+    var job = newQueue.create('new_job',{
+        block_number
+    });
+    job.on('complete',function(){
+        console.log(job.data.block_number);
+    }).on('failed',function(){
+        console.log('Failed');
+    });
+    job.save();
+    newQueue.process('new_job',function (job, done){
+         done && done();
+    });
+    }
 
 const returnedValues = setupNodeSession(settings.node.type,settings.node.host,settings.node.port,settings.node.api_token);
 let node_session = returnedValues[0];
@@ -17,7 +34,9 @@ function processBlock(){
             console.log('Nothing to be scraped');
         }
         else{
-            console.log('Enter into the database');
+            for(let i=0;i<5;i++){
+                newBlock(node_block_number+i);
+            }
         }
     });
 }
