@@ -12,13 +12,13 @@ const connection = new Sequelize(settings.database.db, settings.database.user, s
 function setupNodeSession(node_type, host='localhost', port=8545, api_token='')  {
     let push_trace = 0;
     if(node_type == 'Parity'){
-        node = new Web3(new Web3.providers.HttpProvider(`http://${host}:${port}`));
+        node = new Web3(new Web3.providers.HttpPgrovider(`http://${host}:${port}`));
     }
-    else if(node_type = 'Geth'){
+    else if(node_type == 'Geth'){
         node = new Web3(new Web3.providers.HttpProvider(`http://${host}:${port}`));
     }
     else if(node_type == 'Infura'){
-        node = new Web3( new Web3.providers.HttpProvider(`https://${settings.node.host}"/"${api_token}`));
+        node = new Web3( new Web3.providers.HttpProvider(`https://${host}/${api_token}`));
     }
     else{
         console.log('Node not supported');
