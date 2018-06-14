@@ -4,22 +4,20 @@ const settings = require('./settings');
 const setupNodeSession = require('./initialise').setupNodeSession;
 const connection = require('./initialise').connection;
 const Block = require('./models/blocks');
-var kue = require('kue');
+var kue = require('kue-unique');
 var newQueue = kue.createQueue();
 
 function newBlock(block_number){
     var job = newQueue.create('new_job',{
         block_number
-    });
-    job.on('complete',function(){
-        console.log(job.data.block_number);
-    }).on('failed',function(){
-        console.log('Failed');
-    });
+    }).unique(block_number);
     job.save();
-    newQueue.process('new_job',function (job, done){
-         done && done();
-    });
+    job.remove(function(error, job){
+        if( !error ) {
+             console.log(job.id);
+         }
+     })
+     console.log(job.data);
     }
 
 const returnedValues = setupNodeSession(settings.node.type,settings.node.host,settings.node.port,settings.node.api_token);
@@ -35,7 +33,7 @@ function processBlock(){
         }
         else{
             for(let i=0;i<5;i++){
-                newBlock(node_block_number+i);
+                newBlock(sql_block_number+i);
             }
         }
     });
