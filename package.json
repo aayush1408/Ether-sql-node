@@ -9,7 +9,10 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "async": "^2.6.1",
     "kue": "^0.11.6",
+    "kue-unique": "^1.0.2",
+    "lodash": "^4.17.10",
     "pg": "^7.4.3",
     "sequelize": "^4.37.10",
     "web3": "^0.14.0"
