@@ -15,14 +15,21 @@ function addBlockNumber(block_number){
     
     let block_data = node_session.eth.getBlock(block_number);
     let block_timestamp = block_data.timestamp;
-    let block_iso_timestamp = new Date(block_timestamp).toISOString();
-    block_data.timestamp = block_iso_timestamp;
-    
+    let d = new Date(0);
+    d.setUTCSeconds(block_timestamp);
+    if(d.getMonth()>10){
+    var final_timestamp = `${d.getFullYear()}-${d.getMonth()}-${d.getDate()} ${d.getHours()}:${d.getMinutes()}:${d.getSeconds()}`;        
+    }
+    else{
+    var final_timestamp = `${d.getFullYear()}-0${d.getMonth()}-${d.getDate()} ${d.getHours()}:${d.getMinutes()}:${d.getSeconds()}`;  
+    }
+    console.log(final_timestamp);
+    block_data.timestamp = final_timestamp;
     Block.create({
         block_number :block_data.number,
         block_hash:block_data.hash,
         parent_hash:block_data.parentHash,
-        difficulty:block_data.difficulty,
+        difficulty:block_data.difficulty.toString(),
         gas_used:block_data.gasUsed,
         miner:block_data.miner,
         timestamp:block_data.timestamp,

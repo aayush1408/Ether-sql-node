@@ -23,6 +23,7 @@ function newBlock(block_number){
 const returnedValues = setupNodeSession(settings.node.type,settings.node.host,settings.node.port,settings.node.api_token);
 let node_session = returnedValues[0];
 let push_trace = returnedValues[1];
+
 function processBlock(){
     let node_block_number = node_session.eth.blockNumber;
     connection.query(`SELECT MAX(block_number) FROM blocks`).then((result)=>{
