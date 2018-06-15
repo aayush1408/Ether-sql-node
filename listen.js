@@ -43,5 +43,24 @@ function addBlockNumber(block_number){
     });
 
 }
+
+function getBlockByNumber(block_number){
+    let start = Date.now();
+    var q = Block.findOne({ where: {block_number}})
+    .then((result)=>{
+      console.log(result.dataValues);
+    })
+    let end = Date.now();
+    let elasped = (end - start)/1000;
+    console.log(`Time elapsed ${elasped} seconds`);
+    if(q === null){
+        addBlockNumber(block_number);
+        console.log(`Entering block ${block_number} into db`)
+    }
+    else{
+        console.log('Already exists in database');
+    }
+}
+
 //dummy function call
-addBlockNumber(7663682);
+getBlockByNumber(7663682);
