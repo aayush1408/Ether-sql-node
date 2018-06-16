@@ -14,7 +14,8 @@ let push_trace = returnedValues[1];
 //addBlockno gets the block data from the client using block number and stores into the db.
 function addBlockNumber(block_number){
     console.log('Add block no running..');
-    let block_data = node_session.eth.getBlock(block_number);
+    console.log(block_number);
+    let block_data = node_session.eth.getBlock(parseInt(block_number));
     let block_timestamp = block_data.timestamp;
     let d = new Date(0);
     d.setUTCSeconds(block_timestamp);
@@ -41,14 +42,15 @@ function addBlockNumber(block_number){
         transaction_count:block_data.transactions.length,
     }).then((result)=>{
         console.log(result.dataValues);
-    });
+    }).catch(()=>{
+        console.log('Error in inserting');
+    })
 
 }
 
 //gets the block_no from queue
 //checks whether the no exists in db
 //if not then add into db
-
 module.exports = function getBlockByNumber(block_number){
     let start = Date.now();
     Block.findOne({ where: {block_number}})
