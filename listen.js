@@ -6,11 +6,6 @@ const connection = require('./initialise').connection;
 const Block = require('./models/blocks');
 const newQueue = require('./queue');
 
-newQueue.process('new_job', function (job, done){
-    console.log('Processed');
-    getBlockByNumber(job.data.block_number);
-    done && done();
-});
 
 const returnedValues = setupNodeSession(settings.node.type,settings.node.host,settings.node.port,settings.node.api_token);
 let node_session = returnedValues[0];
@@ -52,19 +47,15 @@ function addBlockNumber(block_number){
 
 function getBlockByNumber(block_number){
     let start = Date.now();
-    var q = Block.findOne({ where: {block_number}})
+    Block.findOne({ where: {block_number}})
     .then((result)=>{
       console.log(result.dataValues);
-    })
-    let end = Date.now();
-    let elasped = (end - start)/1000;
-    console.log(`Time elapsed ${elasped} seconds`);
-    if(q === null){
-        addBlockNumber(block_number);
-        console.log(`Entering block ${block_number} into db`)
-    }
-    else{
-        console.log('Already exists in database');
-    }
+      let end = Date.now();
+      let elasped = (end - start)/1000;
+      console.log(`Time elapsed ${elasped} seconds`);
+      addBlockNumber(block_number);
+      console.log(`Entering block ${block_number} into db`)
+      }).catch((err)=>{
+        console.log('Already exists in database');        
+      })
 }
-
