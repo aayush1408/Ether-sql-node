@@ -5,7 +5,7 @@ const setupNodeSession = require('./initialise').setupNodeSession;
 const connection = require('./initialise').connection;
 const Block = require('./models/blocks');
 const newQueue = require('./queue');
-
+const listen  = require('./listen');
 function newBlock(block_number){
     var job = newQueue.create('new_job',{
         block_number
@@ -17,8 +17,13 @@ function newBlock(block_number){
          }
      })
      console.log(job.data);
+     newQueue.process('new_job', function (job, done){
+        console.log('Processed');
+        getBlockByNumber(job.data.block_number);
+        done && done();
+    });
     }
-    
+   
 const returnedValues = setupNodeSession(settings.node.type,settings.node.host,settings.node.port,settings.node.api_token);
 let node_session = returnedValues[0];
 let push_trace = returnedValues[1];
