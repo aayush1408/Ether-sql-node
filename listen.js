@@ -13,7 +13,7 @@ let push_trace = returnedValues[1];
 
 //addBlockno gets the block data from the client using block number and stores into the db.
 function addBlockNumber(block_number){
-    console.log('Add block no running..');
+    console.log('Addblock no running..');
     console.log(block_number);
     let block_data = node_session.eth.getBlock(parseInt(block_number));
     let block_timestamp = block_data.timestamp;
@@ -41,7 +41,8 @@ function addBlockNumber(block_number){
         uncle_count:block_data.uncles.length,
         transaction_count:block_data.transactions.length,
     }).then((result)=>{
-        console.log(result.dataValues);
+        // console.log(result.dataValues);
+        console.log('Inserting db');
     }).catch(()=>{
         console.log('Error in inserting');
     })

@@ -31,13 +31,8 @@ function newBlock(block_number){
     console.log("Job failed");
     });
     job.save();
-    // job.remove(function(error, job){
-    //     if( !error ) {
-    //          console.log(job.id);
-    //      }
-    //  })
-     console.log(job.data.block_number);
-    }
+    console.log(job.data.block_number);
+}
 
  
 
@@ -50,8 +45,7 @@ let push_trace = returnedValues[1];
 //processBlock() runs every second and checks for the latest block number in node and  max sql node number
 function processBlock(){
     let node_block_number = node_session.eth.blockNumber;
-    console.log('Aaaaaa');
-    console.log(node_block_number);
+    console.log('fetched block no',node_block_number);
     connection.query(`SELECT MAX(block_number) FROM blocks`).then((result)=>{
         var sql_block_number = result[0][0].max;
         console.log(sql_block_number);
@@ -59,7 +53,7 @@ function processBlock(){
             console.log('Nothing to be scraped');
         }
         else{
-            for(let i=0;i<5;i++){
+            for(let i=1;i<=5;i++){
                 newBlock(parseInt(sql_block_number)+i);
             }
         }
