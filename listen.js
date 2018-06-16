@@ -12,6 +12,7 @@ let node_session = returnedValues[0];
 let push_trace = returnedValues[1];
 
 
+
 function addBlockNumber(block_number){
     
     let block_data = node_session.eth.getBlock(block_number);
@@ -45,7 +46,8 @@ function addBlockNumber(block_number){
 
 }
 
-function getBlockByNumber(block_number){
+
+module.exports = function getBlockByNumber(block_number){
     let start = Date.now();
     Block.findOne({ where: {block_number}})
     .then((result)=>{
@@ -53,9 +55,8 @@ function getBlockByNumber(block_number){
       let end = Date.now();
       let elasped = (end - start)/1000;
       console.log(`Time elapsed ${elasped} seconds`);
-      addBlockNumber(block_number);
-      console.log(`Entering block ${block_number} into db`)
       }).catch((err)=>{
-        console.log('Already exists in database');        
-      })
+      console.log(`Entering block ${block_number} into db`);
+      addBlockNumber(block_number);    
+      });
 }
