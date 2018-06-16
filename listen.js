@@ -6,15 +6,14 @@ const connection = require('./initialise').connection;
 const Block = require('./models/blocks');
 const newQueue = require('./queue');
 
-
+//getting the returned values from the setUpnodeSession function    
 const returnedValues = setupNodeSession(settings.node.type,settings.node.host,settings.node.port,settings.node.api_token);
 let node_session = returnedValues[0];
 let push_trace = returnedValues[1];
 
-
-
+//addBlockno gets the block data from the client using block number and stores into the db.
 function addBlockNumber(block_number){
-    
+    console.log('Add block no running..');
     let block_data = node_session.eth.getBlock(block_number);
     let block_timestamp = block_data.timestamp;
     let d = new Date(0);
@@ -46,6 +45,9 @@ function addBlockNumber(block_number){
 
 }
 
+//gets the block_no from queue
+//checks whether the no exists in db
+//if not then add into db
 
 module.exports = function getBlockByNumber(block_number){
     let start = Date.now();
