@@ -6,7 +6,7 @@ const setupNodeSession = require('./initialise').setupNodeSession;
 const connection = require('./initialise').connection;
 const Block = require('./models/blocks');
 const newQueue = require('./queue');
-const listen  = require('./listen');
+const getBlockByNumber  = require('./listen');
 
 function newBlock(block_number){
     var job = newQueue.create('new_job',{
@@ -43,7 +43,7 @@ function processBlock(){
                 newBlock(sql_block_number+i);
             }
         }
-    });
+    });        
 }
 
 setInterval(processBlock,1000);
