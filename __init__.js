@@ -1,3 +1,4 @@
+require('events').EventEmitter.prototype._maxListeners = 0;
 const Web3 = require('web3');
 const sequelize = require('sequelize');
 const settings = require('./settings');
@@ -6,6 +7,7 @@ const connection = require('./initialise').connection;
 const Block = require('./models/blocks');
 const newQueue = require('./queue');
 const listen  = require('./listen');
+
 function newBlock(block_number){
     var job = newQueue.create('new_job',{
         block_number
