@@ -1,3 +1,4 @@
+//Importing the modules
 const pg = require('pg');
 const Sequelize = require('sequelize');
 const Web3 = require('web3');
@@ -8,7 +9,8 @@ const connection = new Sequelize(settings.database.db, settings.database.user, s
     host: 'localhost',
     dialect:'postgres'
   });
- 
+
+//checking for the node type and returning the instance of web3.js
 function setupNodeSession(node_type, host='localhost', port=8545, api_token='')  {
     let push_trace = 0;
     if(node_type == 'Parity'){

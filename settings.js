@@ -1,3 +1,4 @@
+//Exporting the config values
 module.exports = {
     database:{
         user:'test',
