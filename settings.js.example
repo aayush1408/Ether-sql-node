@@ -1,0 +1,13 @@
+module.exports = {
+    database:{
+        user:'username',
+        password:'password',
+        db:'database'
+    },
+    node:{
+        type:'Infura',
+        api_token:your token,
+        host:'kovan.infura.io',
+        port:'8545'
+    }
+}
