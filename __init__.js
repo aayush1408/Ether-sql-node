@@ -16,26 +16,22 @@ const connection = require('./initialise').connection;
 //Getting the models
 const Block = require('./models/blocks');
 
+
 //Acquiring queue
 const newQueue = require('./queue');
 const getBlockByNumber  = require('./listen');
+
 
 //getting the sql_block_number and creating jobs
 function newBlock(block_number){
     var job = newQueue.create('new_job',{
         block_number
     });
-    job.on( 'complete', function () {
-    console.log("Job complete");
-    }).on( 'failed', function () {
-    console.log("Job failed");
-    });
     job.save();
     console.log(job.data.block_number);
 }
 
  
-
 //getting the returned values from the setUpnodeSession function    
 const returnedValues = setupNodeSession(settings.node.type,settings.node.host,settings.node.port,settings.node.api_token);
 let node_session = returnedValues[0];
@@ -60,10 +56,11 @@ function processBlock(){
     });        
 }
  
+
 //calling the processBlock every second
 setInterval(processBlock,1000);
 
-// //proceesing the jobs
+//proceesing the jobs
 newQueue.process('new_job',5, function (job, done){
     console.log('Processed');
     getBlockByNumber(job.data.block_number);
