@@ -1,10 +1,18 @@
 const Web3 = require('web3');
 const sequelize = require('sequelize');
+
+//imported settings
 const settings = require('./settings');
+
+//Acquired web3 instance and setup the connection to db
 const setupNodeSession = require('./initialise').setupNodeSession;
 const connection = require('./initialise').connection;
+
+// Imported the models
 const Block = require('./models/blocks');
 const Transaction = require('./models/transactions');
+
+// Imported the queue
 const newQueue = require('./queue');
 
 //getting the returned values from the setUpnodeSession function    
@@ -14,11 +22,13 @@ let push_trace = returnedValues[1];
 
 //addBlockno gets the block data from the client using block number and stores into the db.
 function addBlockNumber(block_number){
-    console.log('Addblock no running..');
     console.log(block_number);
+
+    //Getting the data of the block using block_number
     let block_data = node_session.eth.getBlock(parseInt(block_number));
+
+    //Updating the timestamp as per our need
     let block_timestamp = block_data.timestamp;
-    console.log(block_data);
     let d = new Date(0);
     d.setUTCSeconds(block_timestamp);
     if(d.getMonth()>10){
@@ -27,8 +37,11 @@ function addBlockNumber(block_number){
     else{
     var final_timestamp = `${d.getFullYear()}-0${d.getMonth()}-${d.getDate()} ${d.getHours()}:${d.getMinutes()}:${d.getSeconds()}`;  
     }
-    console.log(final_timestamp);
+
+    //updating the timestamp in the block data object
     block_data.timestamp = final_timestamp;
+
+    //Adding the block details into the table
     Block.create({
         block_number :block_data.number,
         block_hash:block_data.hash,
@@ -43,15 +56,18 @@ function addBlockNumber(block_number){
         uncle_count:block_data.uncles.length,
         transaction_count:block_data.transactions.length,
     }).then((result)=>{
-        // console.log(result.dataValues);
         console.log('Inserting into block table');
     }).catch(()=>{
-        console.log('Error in inserting');
+        console.log('Error in inserting blocks');
     })
+
+    //Looping through the transaction array in the block data to get hash values
     for(transaction in block_data.transactions){
-        console.log('dsfdghgfsf',transaction);
+
+        //Getting the transaction information
         let transaction_data = node_session.eth.getTransaction(block_data.transactions[transaction]);
-        console.log('Transaction data',transaction_data);
+
+        //Adding the transaction into the table
         Transaction.create({
             transaction_hash:block_data.transactions[transaction],
             block_number:transaction_data.blockNumber,
@@ -65,10 +81,9 @@ function addBlockNumber(block_number){
             timestamp:final_timestamp,
             transaction_index:transaction_data.transactionIndex,
         }).then((result)=>{
-            console.log(result.dataValues)
             console.log('Inserting into the transaction table');
         }).catch(()=>{
-            console.log('Error into inserting');
+            console.log('Error into inserting transactions');
         });
 
     }

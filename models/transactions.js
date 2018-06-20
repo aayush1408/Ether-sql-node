@@ -1,5 +1,6 @@
 const Sequelize = require('sequelize');
 
+//imported settings
 const settings = require('../settings');
 const connection = new Sequelize(settings.database.db, settings.database.user, settings.database.password,{
     host: 'localhost',
@@ -27,4 +28,4 @@ var Transaction = connection.define('transactions',{
     //Remove primary key
     Transaction.removeAttribute('id');
     
-    module.exports = Transaction;
+    module.exports = Transaction;//exporting it

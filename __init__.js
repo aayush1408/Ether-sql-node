@@ -38,7 +38,7 @@ let node_session = returnedValues[0];
 let push_trace = returnedValues[1];
 
 
-//processBlock() runs every second and checks for the latest block number in node and  max sql node number
+//processBlock() runs every second and checks for the latest block number in node and sends max sql node number to the queue
 function processBlock(){
     let node_block_number = node_session.eth.blockNumber;
     console.log('fetched block no',node_block_number);
