@@ -4,6 +4,7 @@ const settings = require('./settings');
 const setupNodeSession = require('./initialise').setupNodeSession;
 const connection = require('./initialise').connection;
 const Block = require('./models/blocks');
+const Transaction = require('./models/transactions');
 const newQueue = require('./queue');
 
 //getting the returned values from the setUpnodeSession function    
@@ -17,6 +18,7 @@ function addBlockNumber(block_number){
     console.log(block_number);
     let block_data = node_session.eth.getBlock(parseInt(block_number));
     let block_timestamp = block_data.timestamp;
+    console.log(block_data);
     let d = new Date(0);
     d.setUTCSeconds(block_timestamp);
     if(d.getMonth()>10){
@@ -42,11 +44,34 @@ function addBlockNumber(block_number){
         transaction_count:block_data.transactions.length,
     }).then((result)=>{
         // console.log(result.dataValues);
-        console.log('Inserting db');
+        console.log('Inserting into block table');
     }).catch(()=>{
         console.log('Error in inserting');
     })
+    for(transaction in block_data.transactions){
+        console.log('dsfdghgfsf',transaction);
+        let transaction_data = node_session.eth.getTransaction(block_data.transactions[transaction]);
+        console.log('Transaction data',transaction_data);
+        Transaction.create({
+            transaction_hash:block_data.transactions[transaction],
+            block_number:transaction_data.blockNumber,
+            nonce:transaction_data.nonce,
+            sender:transaction_data.from, 
+            receiver:transaction_data.to,
+            start_gas:transaction_data.gas,
+            value:transaction_data.value.toString(),
+            data:transaction_data.input,
+            gas_price:transaction_data.gasPrice.toString(),
+            timestamp:final_timestamp,
+            transaction_index:transaction_data.transactionIndex,
+        }).then((result)=>{
+            console.log(result.dataValues)
+            console.log('Inserting into the transaction table');
+        }).catch(()=>{
+            console.log('Error into inserting');
+        });
 
+    }
 }
 
 //gets the block_no from queue
