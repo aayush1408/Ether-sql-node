@@ -1,11 +1,14 @@
 const Sequelize = require('sequelize');
 
+//settings imported
 const settings = require('../settings');
+
+//connection setup
 const connection = new Sequelize(settings.database.db, settings.database.user, settings.database.password,{
     host: 'localhost',
     dialect:'postgres'
   });
-
+//Block Schema
   var Block = connection.define('blocks',{
     block_number:Sequelize.NUMERIC,
     block_hash:Sequelize.STRING,
@@ -22,8 +25,8 @@ const connection = new Sequelize(settings.database.db, settings.database.user, s
     },
     {
       timestamps:false
-      });
+    });
     
     //Remove primary key
     Block.removeAttribute('id');  
-    module.exports = Block;
+    module.exports = Block; //exporting the schema..
